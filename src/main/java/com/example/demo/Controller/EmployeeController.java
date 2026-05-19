@@ -34,4 +34,18 @@ public class EmployeeController {
         List<EmployeeDto> savedemployelist = employeeService.getAllEmployee();
         return ResponseEntity.ok(savedemployelist);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeid,@RequestBody  EmployeeDto upemployeedto)
+    {
+        EmployeeDto employeesaved =employeeService.updateEmployee(employeeid,upemployeedto);
+        return new ResponseEntity<>(employeesaved, HttpStatus.CREATED);
+    }
+    @DeleteMapping({"id"})
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeid)
+    {
+        employeeService.deleteEmployee(employeeid);
+        return ResponseEntity.ok("Deleted successfully");
+    }
+
 }
