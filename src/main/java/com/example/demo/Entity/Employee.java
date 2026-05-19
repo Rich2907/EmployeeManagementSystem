@@ -2,10 +2,7 @@ package com.example.demo.Entity;
 
 //Lombok is a Java library that automatically generates repetitive code for you,
 // so you don’t have to write it manually.
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import  lombok.AllArgsConstructor;
 import  lombok.Getter;
 import  lombok.Setter;
@@ -20,15 +17,16 @@ import  lombok.NoArgsConstructor;
 @Table(name="Employee")
 public class Employee {
     @Id
-    @Column(name="Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
-    @Column(name="First Name")
+    @Column(name="firstName")
     private String firstName;
 
-    @Column(name="Last Name")
+    @Column(name="lastName")
     private String lastName;
 
-    @Column(name="Email")
+    @Column(name="email")
     private String email;
 }
