@@ -1,6 +1,7 @@
 package com.example.demo.services.EmployeeServiceImpl;
 
 import com.example.demo.Entity.Employee;
+import com.example.demo.Exception.resourceNotFoundException;
 import com.example.demo.dto.EmployeeDto;
 import com.example.demo.mapper.EmployeeMapper;
 import com.example.demo.repositories.EmployeeRepository;
@@ -20,5 +21,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = EmployeeMapper.employeeDtotoemployee(employeeDto);
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.employeetoemployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeByid(Long employeeid) {
+     Employee employee=  employeeRepository.findById(employeeid).orElseThrow(()->
+                new resourceNotFoundException("id does  not exist"+employeeid));
+     return EmployeeMapper.employeetoemployeeDto(employee);
     }
 }
