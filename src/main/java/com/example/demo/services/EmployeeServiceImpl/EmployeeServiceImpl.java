@@ -1,7 +1,7 @@
 package com.example.demo.services.EmployeeServiceImpl;
 
 import com.example.demo.Entity.Employee;
-import com.example.demo.Exception.resourceNotFoundException;
+import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.dto.EmployeeDto;
 import com.example.demo.mapper.EmployeeMapper;
 import com.example.demo.repositories.EmployeeRepository;
@@ -29,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto getEmployeeByid(Long employeeid) {
      Employee employee=  employeeRepository.findById(employeeid).orElseThrow(()->
-                new resourceNotFoundException("id does  not exist"+employeeid));
+                new ResourceNotFoundException("id does  not exist"+employeeid));
      return EmployeeMapper.employeetoemployeeDto(employee);
     }
 
@@ -45,7 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee employee=  employeeRepository.findById(employeeid)
                 .orElseThrow(()->
-                new resourceNotFoundException("id does  not exist"+employeeid));
+                new ResourceNotFoundException("id does  not exist"+employeeid));
         employee.setFirstName(employeedto.getFirstName());
         employee.setLastName(employeedto.getLastName());
         employee.setEmail(employeedto.getEmail());
@@ -57,8 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(Long employeeid) {
         Employee employee=  employeeRepository.findById(employeeid)
                 .orElseThrow(() ->
-                        new resourceNotFoundException(
-                                "id does not exist " + employeeid
-                        ));
+                        new ResourceNotFoundException(
+                                "id does not exist " + employeeid));
         employeeRepository.deleteById(employeeid);}
 }
