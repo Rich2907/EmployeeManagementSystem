@@ -1,56 +1,82 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.*;
 import com.example.demo.Entity.Users;
-import com.example.demo.dto.LoginDto;
-import com.example.demo.dto.SignupDto;
 import com.example.demo.repositories.userRepositories;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-@AllArgsConstructor
 @Service
-@Builder
+@AllArgsConstructor
 public class AuthenService {
-    private userRepositories userRepositories;
+
+    private userRepositories userRepository;
+
+    private PasswordEncoder passwordEncoder;
+
+    private JwtService jwtService;
+
     public String signup(SignupDto request) {
 
-        Users existingUser = userRepositories
+        Users existingUser =
+                userRepository
                         .findByEmail(request.getEmail())
                         .orElse(null);
 
         if(existingUser != null) {
             return "Email Already Exists";
         }
+
         Users user = new Users();
 
         user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
 
-        userRepositories.save(user);
+        user.setEmail(request.getEmail());
+
+        user.setPassword(
+                passwordEncoder.encode(
+                        request.getPassword()
+                )
+        );
+
+        user.setRole("USER");
+
+        userRepository.save(user);
 
         return "User Registered Successfully";
     }
 
-    public String login(LoginDto request) {
+    public AuthDto login(LoginDto request) {
 
         Users user =
-                userRepositories
+                userRepository
                         .findByEmail(request.getEmail())
                         .orElse(null);
 
         if(user == null) {
-            return "User Not Found";
+            throw new RuntimeException(
+                    "User Not Found"
+            );
         }
 
-        if(user.getPassword()
-                .equals(request.getPassword())) {
+        boolean valid =
+                passwordEncoder.matches(
+                        request.getPassword(),
+                        user.getPassword()
+                );
 
-            return "Login Successful";
+        if(!valid) {
+            throw new RuntimeException(
+                    "Invalid Password"
+            );
         }
 
-        return "Invalid Password";
+        String token =
+                jwtService.generateToken(user);
+
+        return new AuthDto(token);
     }
 }

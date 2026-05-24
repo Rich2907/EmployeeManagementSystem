@@ -1,11 +1,9 @@
-
 package com.example.demo.Controller;
 
-import com.example.demo.dto.LoginDto;
-import com.example.demo.dto.SignupDto;
-
+import com.example.demo.dto.*;
 
 import com.example.demo.services.AuthenService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 
-@CrossOrigin("*")
-
 @AllArgsConstructor
+
+@CrossOrigin("*")
 public class AuthController {
 
     private AuthenService authService;
@@ -28,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(
+    public AuthDto login(
             @RequestBody LoginDto request) {
 
         return authService.login(request);
